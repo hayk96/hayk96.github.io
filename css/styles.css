@@ -11407,6 +11407,18 @@ p.lead {
   font-size: 3rem;
 }
 
+.icon-text{
+  width: auto;
+  font-size: small;
+  text-align:center;
+  display:block;
+  background-color: transparent;
+  border: 1px solid transparent;
+  margin-right: 10px;
+  margin-bottom: 1px;
+  float:left;
+}
+
 section.resume-section {
   display: flex;
   align-items: center;
