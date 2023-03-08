@@ -11424,6 +11424,7 @@ p.lead {
   display: block;
   background-color: transparent;
   border: 1px solid transparent;
+  margin-left: 15px;
   margin-right: 10px;
   margin-bottom: 1px;
   float:left;
