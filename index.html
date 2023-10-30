@@ -14,6 +14,8 @@
         <link href="https://fonts.googleapis.com/css?family=Muli:400,400i,800,800i" rel="stylesheet" type="text/css" />
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="css/styles.css" rel="stylesheet" />
+        <!-- D3 library-->
+        <script src="https://d3js.org/d3.v6.min.js"></script>
     </head>
     <body id="page-top">
         <!-- Navigation-->
@@ -29,6 +31,7 @@
                     <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#experience">Experience</a></li>
                     <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#education">Education</a></li>
                     <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#skills">Skills</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#open-source">Open Source</a></li>
                     <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#interests">Interests</a></li>
                     <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#awards">Awards</a></li>
                 </ul>
@@ -181,6 +184,99 @@
                         <a class="icon" href="https://cloud.google.com/" target="_blank"><img height="45" width="45" src="assets/img/logo/gcp.png"><p>N/A</p><br>GCP</a>
                     </ul>
                 </div>
+            </section>
+            <hr class="m-0" />
+            <!-- Open Source-->
+            <section class="resume-section" id="open-source">
+                <section>
+                <div class="resume-section-content">
+                    <h2 class="mb-5">Open Source</h2>
+                    <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                        <div class="flex-grow-1">
+                            <div class="subheading mb-0 fw-bold">Open Source Contributions</div>
+                            <p style="width: 52ch; text-overflow: ellipsis">
+                                I am passionate about open-source projects, and I recognize that a thoughtful
+                                approach is necessary to understand the norms, standards, and practices unique to
+                                each community for successful contributions. You can view my contributed projects and
+                                respective PRs in the table to the right.
+                            </p>
+                            <br>
+                            <div class="subheading mb-0 fw-bold">Personal Projects</div>
+                            <p>The top OSS projects by Hayk:</p>
+                            <a style="text-decoration:none" target="_blank" href="https://github.com/hayk96/prometheus-api">&nbsp&nbsp✪ prometheus-api</a><br>
+                            <a style="text-decoration:none" target="_blank" href="https://github.com/hayk96/alerta-web">&nbsp&nbsp✪ alerta-web</a><br>
+                            <a style="text-decoration:none" target="_blank" href="https://github.com/hayk96/trafficlight-docker-challenge">&nbsp&nbsp✪ trafficlight-docker-challenge</a>
+                        </div>
+                    </div>
+                </div>
+                </section>
+                <div style="width: 100%; overflow: hidden; border-radius: 4px; box-shadow: 0px 0px 10px rgb(169,0,235);">
+                    <table style="border-collapse: collapse; width: 100%; background-color: #fff;">
+                        <thead>
+                            <tr>
+                                <th style="background-color: rgba(121,1,178,0.89); color: white; padding: 12px 15px;">Organization</th>
+                                <th style="background-color: rgba(121,1,178,0.89); color: white; padding: 12px 15px;">Repository</th>
+                                <th style="background-color: rgba(121,1,178,0.89); color: white; padding: 12px 15px;">PRs by Hayk</th>
+                            </tr>
+                        </thead>
+                    </table>
+                    <div class="scrollable-table-container" style="max-height: 400px; overflow-y: auto;">
+                        <table style="border-collapse: collapse; width: 100%; background-color: #fff; table-layout: fixed;">
+                            <tbody id="repoTable">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <script src="github-contributions.js"></script>
+                <script>
+                    function visualizeData(wholeData) {
+                        const data = wholeData.data;
+                        if (!data || !data.user || !data.user.repositoriesContributedTo) {
+                            console.error('Required data properties not found');
+                            return;
+                        }
+                        const repos = data.user.repositoriesContributedTo.nodes;
+                        const tableBody = d3.select('#repoTable');
+
+                        const rows = tableBody.selectAll('tr')
+                            .data(repos)
+                            .enter()
+                            .append('tr')
+                            .attr('style', 'border-top: 1px solid #e2e2e2;');
+
+                        const ownerCell = rows.append('td')
+                            .attr('style', 'border-bottom: 1px solid #e2e2e2; padding: 5px 10px;')
+                            .append('div')
+                            .attr('style', 'display: flex; align-items: center;');
+
+                        ownerCell.append('img')
+                            .attr('src', d => d.owner.avatarUrl)
+                            .attr('alt', d => `Logo of ${d.owner.login}`)
+                            .attr('width', 25)
+                            .attr('height', 25)
+                            .attr('style', 'border-radius: 50%; vertical-align: middle; margin-right: 10px;');
+
+                        ownerCell.append('a')
+                            .attr('href', d => d.owner.url)
+                            .attr('style', 'text-decoration: none; color: #0366d6;')
+                            .text(d => d.owner.login);
+
+                        rows.append('td')
+                            .attr('style', 'border-bottom: 1px solid #e2e2e2; padding: 20px 15px;')
+                            .append('a')
+                            .attr('href', d => d.url)
+                            .attr('style', 'text-decoration: none; color: #0366d6;')
+                            .text(d => d.name);
+
+                        rows.append('td')
+                            .attr('style', 'border-bottom: 1px solid #e2e2e2; padding: 20px 15px;')
+                            .append('a')
+                            .attr('href', d => `${d.url}/pulls?q=author:hayk96`)
+                            .attr('style', 'text-decoration: none; color: #0366d6;')
+                            .text('View');
+                    }
+                    visualizeData(githubData);
+                </script>
             </section>
             <hr class="m-0" />
             <!-- Interests-->
