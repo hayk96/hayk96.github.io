@@ -28,7 +28,6 @@ jobs:
         echo 'let githubData =' > js/github-contributions.js &&
         curl -s -X POST -H "Authorization: bearer ${{ secrets.GH_TOKEN }}" \
         -d '{ "query": "query UserContributions($username: String!) { user(login: $username) { repositoriesContributedTo(first: 100, contributionTypes: [COMMIT, PULL_REQUEST, REPOSITORY]) { nodes { name url owner { login avatarUrl url } } } } }", "variables": { "username": "hayk96" } }' https://api.github.com/graphql 1>> js/github-contributions.js
-        cat js/github-contributions.js
 
     - name: Commit and push changes
       run: |
