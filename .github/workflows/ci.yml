@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - main
+  schedule:
+    - cron: '0 2 * * *'
 
 jobs:
   fetch_github_contributions:
@@ -25,9 +27,9 @@ jobs:
 
     - name: Fetch data and write to file
       run: |
-        echo 'let githubData =' > js/github-contributions.js &&
-        curl -s -X POST -H "Authorization: bearer ${{ secrets.GH_TOKEN }}" \
-        -d '{ "query": "query UserContributions($username: String!) { user(login: $username) { repositoriesContributedTo(first: 100, contributionTypes: [COMMIT, PULL_REQUEST, REPOSITORY]) { nodes { name url owner { login avatarUrl url } } } } }", "variables": { "username": "hayk96" } }' https://api.github.com/graphql 1>> js/github-contributions.js
+        req=`curl -s -X POST -H "Authorization: bearer ${{ secrets.GH_TOKEN }}" -w "%{http_code}" -o js/github-contributions.js \
+        -d '{ "query": "query UserContributions($username: String!) { user(login: $username) { repositoriesContributedTo(first: 100, contributionTypes: [COMMIT, PULL_REQUEST, REPOSITORY]) { nodes { name url owner { login avatarUrl url } } } } }", "variables": { "username": "hayk96" } }' https://api.github.com/graphql`
+        if [[ $req == '200' ]] ; then sed -i '1s/^/let githubData =\n/' js/github-contributions.js ; else false ; fi
 
     - name: Commit and push changes
       run: |
