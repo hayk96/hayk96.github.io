@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  fetch_github_contributions:
+    name: Fetch GitHub contributions
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Import GPG key
+      uses: crazy-max/ghaction-import-gpg@v5
+      with:
+        gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+        passphrase: ${{ secrets.GPG_PASSPHRASE }}
+        git_user_signingkey: true
+        git_commit_gpgsign: true
+
+    - name: Fetch data and write to file
+      run: |
+        echo 'let githubData =' > js/github-contributions.js &&
+        curl -s -X POST -H "Authorization: bearer ${{ secrets.GH_TOKEN }}" \
+        -d '{ "query": "query UserContributions($username: String!) { user(login: $username) { repositoriesContributedTo(first: 100, contributionTypes: [COMMIT, PULL_REQUEST, REPOSITORY]) { nodes { name url owner { login avatarUrl url } } } } }", "variables": { "username": "hayk96" } }' https://api.github.com/graphql 1>> js/github-contributions.js
+        cat js/github-contributions.js
+
+    - name: Commit and push changes
+      run: |
+        git commit -a --no-edit --allow-empty -S -s -m "Update contributions for $(date)"
+        git push
